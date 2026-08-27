@@ -16,7 +16,7 @@ st.set_page_config(
 )
 
 # ============================================================
-# SIMPLE PROFESSIONAL CSS
+# CSS
 # ============================================================
 
 st.markdown("""
@@ -32,7 +32,6 @@ st.markdown("""
     padding-bottom: 3rem;
 }
 
-/* Main headings */
 h1 {
     color: #172033 !important;
     font-weight: 800 !important;
@@ -47,16 +46,14 @@ h3 {
     color: #26344d !important;
 }
 
-/* Normal text */
-p, li, label {
+p, li {
     color: #374151 !important;
     font-size: 16px;
 }
 
-/* Metric styling */
 [data-testid="stMetric"] {
     background-color: white;
-    border: 1px solid #e1e6ef;
+    border: 1px solid #dfe5ee;
     border-radius: 12px;
     padding: 18px;
 }
@@ -69,30 +66,21 @@ p, li, label {
     color: #172033 !important;
 }
 
-/* Divider */
-hr {
-    border-color: #dce2eb;
-}
-
-/* File uploader */
 [data-testid="stFileUploader"] {
     background-color: white;
     border-radius: 12px;
     padding: 10px;
-    border: 1px solid #dce2eb;
+    border: 1px solid #dce3ed;
 }
 
-/* Buttons */
-.stButton > button {
-    border-radius: 8px;
-    font-weight: 600;
+hr {
+    border-color: #dce2eb;
 }
 
-/* Footer */
 .footer {
     text-align: center;
     color: #64748b;
-    padding-top: 30px;
+    padding-top: 35px;
 }
 
 </style>
@@ -100,7 +88,7 @@ hr {
 
 
 # ============================================================
-# LOAD MODEL
+# LOAD RANDOM FOREST MODEL
 # ============================================================
 
 MODEL_PATH = "vehicle_random_forest_model.pkl"
@@ -108,8 +96,8 @@ MODEL_PATH = "vehicle_random_forest_model.pkl"
 if not os.path.exists(MODEL_PATH):
 
     st.error(
-        "Model file 'vehicle_random_forest_model.pkl' was not found. "
-        "Place the pickle file in the same folder as app.py."
+        "vehicle_random_forest_model.pkl was not found. "
+        "Please place the pickle file in the same folder as app.py."
     )
 
     st.stop()
@@ -135,15 +123,21 @@ classes = [
 
 
 # ============================================================
-# ACCURACY
+# ACTUAL MODEL RESULTS
 # ============================================================
 
-# Your confirmed Decision Tree accuracy
 decision_tree_accuracy = 43.38
+random_forest_accuracy = 62.16
 
-# CHANGE THIS AFTER RUNNING YOUR RANDOM FOREST CODE
-# Example: if RF accuracy = 58.75%, write 58.75
-random_forest_accuracy = 0.0
+accuracy_improvement = (
+    random_forest_accuracy -
+    decision_tree_accuracy
+)
+
+relative_improvement = (
+    accuracy_improvement /
+    decision_tree_accuracy
+) * 100
 
 
 # ============================================================
@@ -153,7 +147,7 @@ random_forest_accuracy = 0.0
 st.title("VehicleVision AI")
 
 st.subheader(
-    "Vehicle Image Classification using Machine Learning"
+    "Vehicle Image Classification with Machine Learning"
 )
 
 st.write(
@@ -186,14 +180,14 @@ with col2:
 
 with col3:
     st.metric(
-        "Image Size",
-        "64 × 64"
+        "Decision Tree",
+        "43.38%"
     )
 
 with col4:
     st.metric(
-        "Decision Tree",
-        "43.38%"
+        "Random Forest",
+        "62.16%"
     )
 
 
@@ -201,90 +195,81 @@ st.write("")
 
 
 # ============================================================
-# MODEL COMPARISON
+# MODEL IMPROVEMENT
 # ============================================================
 
-st.header("Model Performance")
+st.header("Model Improvement")
 
 st.write(
-    "The Decision Tree was first used as a baseline model. "
-    "Random Forest was then applied as an ensemble approach "
-    "to improve the model's generalization and prediction stability."
+    "The Decision Tree was first developed as the baseline model. "
+    "Random Forest was then applied as an ensemble method, "
+    "combining multiple decision trees to produce more robust predictions."
 )
 
-if random_forest_accuracy > 0:
+col1, col2, col3 = st.columns(3)
 
-    improvement = (
-        random_forest_accuracy -
-        decision_tree_accuracy
+with col1:
+
+    st.metric(
+        "Decision Tree Accuracy",
+        "43.38%"
     )
 
-    relative_improvement = (
-        improvement / decision_tree_accuracy
-    ) * 100
+with col2:
 
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric(
-            "Decision Tree",
-            f"{decision_tree_accuracy:.2f}%"
-        )
-
-    with col2:
-        st.metric(
-            "Random Forest",
-            f"{random_forest_accuracy:.2f}%"
-        )
-
-    with col3:
-        st.metric(
-            "Improvement",
-            f"+{improvement:.2f}%"
-        )
-
-    comparison = pd.DataFrame({
-        "Model": [
-            "Decision Tree",
-            "Random Forest"
-        ],
-        "Accuracy": [
-            decision_tree_accuracy,
-            random_forest_accuracy
-        ]
-    })
-
-    st.bar_chart(
-        comparison.set_index("Model")
+    st.metric(
+        "Random Forest Accuracy",
+        "62.16%"
     )
 
-    st.success(
-        f"Random Forest improved the accuracy by "
-        f"{improvement:.2f} percentage points "
-        f"({relative_improvement:.1f}% relative improvement)."
+with col3:
+
+    st.metric(
+        "Accuracy Gain",
+        f"+{accuracy_improvement:.2f}%"
     )
 
-else:
 
-    col1, col2 = st.columns(2)
+st.write("")
 
-    with col1:
-        st.metric(
-            "Decision Tree Accuracy",
-            "43.38%"
-        )
+comparison_df = pd.DataFrame({
+    "Model": [
+        "Decision Tree",
+        "Random Forest"
+    ],
+    "Accuracy (%)": [
+        decision_tree_accuracy,
+        random_forest_accuracy
+    ]
+})
 
-    with col2:
-        st.metric(
-            "Random Forest Accuracy",
-            "Run Model"
-        )
+st.bar_chart(
+    comparison_df.set_index("Model")
+)
 
-    st.info(
-        "After running the Random Forest training code, "
-        "enter its accuracy in the code above to complete "
-        "the comparison."
-    )
+st.success(
+    f"Random Forest increased test accuracy from "
+    f"{decision_tree_accuracy:.2f}% to "
+    f"{random_forest_accuracy:.2f}%, "
+    f"a gain of {accuracy_improvement:.2f} percentage points."
+)
+
+
+st.caption(
+    f"Relative improvement over the Decision Tree: "
+    f"{relative_improvement:.1f}%."
+)
+
+
+# ============================================================
+# IMPORTANT ACCURACY EXPLANATION
+# ============================================================
+
+st.info(
+    "Model Accuracy (62.16%) is measured across the complete "
+    "test dataset. It is different from the confidence shown "
+    "for an individual uploaded image."
+)
 
 
 # ============================================================
@@ -300,12 +285,14 @@ with col1:
     st.subheader("Decision Tree")
 
     st.write(
-        "A Decision Tree makes predictions using a single "
-        "tree. It is simple and easy to interpret, but its "
-        "performance can be sensitive to the training data."
+        "The Decision Tree uses one tree to make predictions. "
+        "It provided a baseline accuracy of 43.38%."
     )
 
-    st.write("**Baseline Accuracy: 43.38%**")
+    st.write(
+        "A single tree can be sensitive to the training data "
+        "and may produce less stable predictions."
+    )
 
 
 with col2:
@@ -313,38 +300,42 @@ with col2:
     st.subheader("Random Forest")
 
     st.write(
-        "Random Forest combines multiple Decision Trees "
-        "and aggregates their predictions. This makes the "
-        "model more robust and generally reduces the risk "
-        "of relying on one unstable tree."
+        "Random Forest combines many decision trees and "
+        "aggregates their predictions."
     )
 
-    st.write("**Final Model: Random Forest**")
+    st.write(
+        "This ensemble approach produced a test accuracy "
+        "of 62.16%, improving the baseline by 18.78 percentage points."
+    )
 
 
 st.divider()
 
 
 # ============================================================
-# IMAGE PREDICTION
+# IMAGE CLASSIFICATION
 # ============================================================
 
-st.header("Try VehicleVision AI")
+st.header("Try the Model")
 
 st.write(
-    "Upload a vehicle image and the trained Random Forest "
-    "model will predict its category."
+    "Upload a vehicle image to see the prediction made by "
+    "the trained Random Forest model."
 )
 
 uploaded_file = st.file_uploader(
-    "Choose a vehicle image",
+    "Upload Vehicle Image",
     type=["jpg", "jpeg", "png"]
 )
 
 
 if uploaded_file is not None:
 
-    # Read image
+    # --------------------------------------------------------
+    # READ IMAGE
+    # --------------------------------------------------------
+
     file_bytes = np.asarray(
         bytearray(uploaded_file.read()),
         dtype=np.uint8
@@ -357,22 +348,31 @@ if uploaded_file is not None:
 
     if image is None:
 
-        st.error("Unable to read the uploaded image.")
+        st.error(
+            "The uploaded image could not be read."
+        )
 
     else:
 
-        # Resize exactly as training
+        # ----------------------------------------------------
+        # PREPROCESS IMAGE
+        # ----------------------------------------------------
+
         resized_image = cv2.resize(
             image,
             (64, 64)
         )
 
-        # Flatten exactly as training
-        flattened_image = resized_image.flatten().reshape(
-            1, -1
+        flattened_image = (
+            resized_image
+            .flatten()
+            .reshape(1, -1)
         )
 
-        # Prediction
+        # ----------------------------------------------------
+        # PREDICTION
+        # ----------------------------------------------------
+
         prediction = model.predict(
             flattened_image
         )
@@ -385,25 +385,29 @@ if uploaded_file is not None:
             predicted_index
         ]
 
-        # Probability
+
+        # ----------------------------------------------------
+        # INDIVIDUAL IMAGE CONFIDENCE
+        # ----------------------------------------------------
+
         if hasattr(model, "predict_proba"):
 
             probabilities = model.predict_proba(
                 flattened_image
             )[0]
 
-            confidence = (
+            image_confidence = (
                 np.max(probabilities) * 100
             )
 
         else:
 
             probabilities = None
-            confidence = 0
+            image_confidence = 0
 
 
         # ----------------------------------------------------
-        # DISPLAY IMAGE + RESULT
+        # DISPLAY
         # ----------------------------------------------------
 
         col1, col2 = st.columns(2)
@@ -415,21 +419,27 @@ if uploaded_file is not None:
                     image,
                     cv2.COLOR_BGR2RGB
                 ),
-                caption="Uploaded Vehicle",
+                caption="Uploaded Vehicle Image",
                 use_container_width=True
             )
 
+
         with col2:
 
-            st.subheader("Prediction")
+            st.subheader("AI Prediction")
 
             st.success(
-                f"Vehicle: {predicted_class}"
+                f"Predicted Vehicle: {predicted_class}"
             )
 
             st.metric(
-                "Confidence",
-                f"{confidence:.2f}%"
+                "Confidence for This Image",
+                f"{image_confidence:.2f}%"
+            )
+
+            st.caption(
+                "This confidence score applies only to this "
+                "uploaded image. It is NOT the overall model accuracy."
             )
 
 
@@ -440,13 +450,14 @@ if uploaded_file is not None:
         if probabilities is not None:
 
             st.subheader(
-                "Prediction Probability by Class"
+                "Prediction Probability"
             )
 
             probability_df = pd.DataFrame({
                 "Vehicle": classes,
-                "Probability (%)":
+                "Probability (%)": (
                     probabilities * 100
+                )
             })
 
             probability_df = (
@@ -463,12 +474,6 @@ if uploaded_file is not None:
                 hide_index=True
             )
 
-            st.bar_chart(
-                probability_df.set_index(
-                    "Vehicle"
-                )
-            )
-
 
 # ============================================================
 # MACHINE LEARNING PIPELINE
@@ -478,43 +483,45 @@ st.divider()
 
 st.header("Machine Learning Pipeline")
 
-pipeline = pd.DataFrame({
-    "Step": [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7"
+pipeline_df = pd.DataFrame({
+    "Stage": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08"
     ],
     "Process": [
         "Vehicle Image Dataset",
         "Resize Images to 64 × 64",
-        "Convert Images to Pixel Features",
+        "Flatten Images into Pixel Features",
         "Train/Test Split",
         "Decision Tree Baseline",
         "Random Forest Training",
-        "Pickle Model + Streamlit Deployment"
+        "Model Evaluation",
+        "Pickle + Streamlit Deployment"
     ]
 })
 
 st.dataframe(
-    pipeline,
+    pipeline_df,
     use_container_width=True,
     hide_index=True
 )
 
 
 # ============================================================
-# DATASET CLASSES
+# VEHICLE CLASSES
 # ============================================================
 
-st.header("Vehicle Categories")
+st.header("Supported Vehicle Categories")
 
 category_df = pd.DataFrame({
     "Label": range(7),
-    "Vehicle Category": classes
+    "Category": classes
 })
 
 st.dataframe(
@@ -531,32 +538,30 @@ st.dataframe(
 st.header("Technology Stack")
 
 st.write(
-    "**Python**  •  "
-    "**OpenCV**  •  "
-    "**NumPy**  •  "
-    "**Pandas**  •  "
-    "**Scikit-learn**  •  "
-    "**Random Forest**  •  "
-    "**Pickle**  •  "
-    "**Streamlit**"
+    "Python  •  OpenCV  •  NumPy  •  Pandas  •  "
+    "Scikit-learn  •  Random Forest  •  Pickle  •  Streamlit"
 )
 
 
 # ============================================================
-# PROJECT SUMMARY
+# PROJECT RESULT
 # ============================================================
 
 st.divider()
 
-st.header("Project Summary")
+st.header("Final Result")
 
 st.write(
-    "This project demonstrates how a traditional Machine "
-    "Learning approach can be applied to image classification. "
-    "A Decision Tree established the initial baseline with "
-    "43.38% accuracy. Random Forest was subsequently used "
-    "to combine multiple decision trees and create a more "
-    "robust classification model."
+    f"The initial Decision Tree achieved an accuracy of "
+    f"{decision_tree_accuracy:.2f}%. After moving to Random Forest, "
+    f"the test accuracy increased to {random_forest_accuracy:.2f}%. "
+    f"This represents an improvement of "
+    f"{accuracy_improvement:.2f} percentage points."
+)
+
+
+st.success(
+    "Decision Tree: 43.38%  →  Random Forest: 62.16%"
 )
 
 
