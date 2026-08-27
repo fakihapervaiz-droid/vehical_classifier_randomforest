@@ -12,194 +12,87 @@ import pandas as pd
 st.set_page_config(
     page_title="VehicleVision AI",
     page_icon="🚘",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
 # ============================================================
-# CUSTOM CSS
+# SIMPLE PROFESSIONAL CSS
 # ============================================================
 
 st.markdown("""
 <style>
 
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
-
 .stApp {
-    background: #f5f7fb;
+    background-color: #f7f9fc;
 }
 
-/* Main container */
 .block-container {
-    max-width: 1180px;
-    padding-top: 35px;
-    padding-bottom: 60px;
+    max-width: 1150px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
 }
 
-/* Hero */
-.hero {
-    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-    padding: 50px 55px;
-    border-radius: 24px;
-    margin-bottom: 30px;
-    color: white;
+/* Main headings */
+h1 {
+    color: #172033 !important;
+    font-weight: 800 !important;
 }
 
-.hero-small {
-    color: #9ca3af;
-    font-size: 14px;
-    letter-spacing: 2px;
-    font-weight: 700;
-    text-transform: uppercase;
+h2 {
+    color: #172033 !important;
+    font-weight: 750 !important;
 }
 
-.hero-title {
-    font-size: 52px;
-    font-weight: 850;
-    line-height: 1.05;
-    margin-top: 10px;
-    margin-bottom: 15px;
+h3 {
+    color: #26344d !important;
 }
 
-.hero-text {
-    color: #d1d5db;
-    font-size: 18px;
-    max-width: 750px;
-    line-height: 1.6;
-}
-
-/* Section */
-.section-title {
-    font-size: 28px;
-    font-weight: 800;
-    color: #111827;
-    margin-top: 35px;
-    margin-bottom: 5px;
-}
-
-.section-subtitle {
-    color: #6b7280;
-    font-size: 15px;
-    margin-bottom: 20px;
-}
-
-/* Metric cards */
-.metric {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 18px;
-    padding: 23px;
-    min-height: 125px;
-    box-shadow: 0 5px 18px rgba(0,0,0,0.04);
-}
-
-.metric-label {
-    color: #6b7280;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-}
-
-.metric-value {
-    color: #111827;
-    font-size: 32px;
-    font-weight: 850;
-    margin-top: 8px;
-}
-
-.metric-note {
-    color: #9ca3af;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-/* White cards */
-.card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 20px;
-    padding: 28px;
-    box-shadow: 0 5px 18px rgba(0,0,0,0.04);
-}
-
-/* Upload */
-[data-testid="stFileUploader"] {
-    background: white;
-    border-radius: 18px;
-    border: 1px dashed #cbd5e1;
-    padding: 10px;
-}
-
-/* Prediction */
-.prediction-card {
-    background: #111827;
-    color: white;
-    border-radius: 20px;
-    padding: 35px;
-    text-align: center;
-    min-height: 260px;
-}
-
-.prediction-label {
-    color: #9ca3af;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.prediction-name {
-    font-size: 38px;
-    font-weight: 850;
-    margin: 12px 0;
-}
-
-.confidence {
-    font-size: 17px;
-    color: #d1d5db;
-}
-
-/* Comparison */
-.compare {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 20px;
-    padding: 28px;
-}
-
-/* Pipeline */
-.step {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 15px;
-    padding: 18px;
-    text-align: center;
-    min-height: 105px;
-}
-
-.step-number {
-    font-size: 13px;
-    color: #6b7280;
-    font-weight: 700;
-}
-
-.step-title {
+/* Normal text */
+p, li, label {
+    color: #374151 !important;
     font-size: 16px;
-    font-weight: 750;
-    color: #111827;
-    margin-top: 8px;
+}
+
+/* Metric styling */
+[data-testid="stMetric"] {
+    background-color: white;
+    border: 1px solid #e1e6ef;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #64748b !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: #172033 !important;
+}
+
+/* Divider */
+hr {
+    border-color: #dce2eb;
+}
+
+/* File uploader */
+[data-testid="stFileUploader"] {
+    background-color: white;
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid #dce2eb;
+}
+
+/* Buttons */
+.stButton > button {
+    border-radius: 8px;
+    font-weight: 600;
 }
 
 /* Footer */
 .footer {
     text-align: center;
-    color: #9ca3af;
-    margin-top: 55px;
-    padding-top: 25px;
-    border-top: 1px solid #e5e7eb;
-    font-size: 13px;
+    color: #64748b;
+    padding-top: 30px;
 }
 
 </style>
@@ -207,7 +100,7 @@ header {visibility: hidden;}
 
 
 # ============================================================
-# MODEL
+# LOAD MODEL
 # ============================================================
 
 MODEL_PATH = "vehicle_random_forest_model.pkl"
@@ -215,18 +108,19 @@ MODEL_PATH = "vehicle_random_forest_model.pkl"
 if not os.path.exists(MODEL_PATH):
 
     st.error(
-        "Model file not found. Please place "
-        "`vehicle_random_forest_model.pkl` in the same folder as app.py."
+        "Model file 'vehicle_random_forest_model.pkl' was not found. "
+        "Place the pickle file in the same folder as app.py."
     )
 
     st.stop()
 
-with open(MODEL_PATH, "rb") as f:
-    model = pickle.load(f)
+
+with open(MODEL_PATH, "rb") as file:
+    model = pickle.load(file)
 
 
 # ============================================================
-# CLASSES
+# VEHICLE CLASSES
 # ============================================================
 
 classes = [
@@ -241,123 +135,81 @@ classes = [
 
 
 # ============================================================
-# MODEL ACCURACY
+# ACCURACY
 # ============================================================
 
-# Your actual Decision Tree result
+# Your confirmed Decision Tree accuracy
 decision_tree_accuracy = 43.38
 
-# ------------------------------------------------------------
-# IMPORTANT:
-# Enter the Random Forest accuracy printed by your notebook.
-#
-# Example:
-# random_forest_accuracy = 58.75
-# ------------------------------------------------------------
-
+# CHANGE THIS AFTER RUNNING YOUR RANDOM FOREST CODE
+# Example: if RF accuracy = 58.75%, write 58.75
 random_forest_accuracy = 0.0
 
 
 # ============================================================
-# HERO
+# HEADER
 # ============================================================
 
-st.markdown("""
-<div class="hero">
+st.title("VehicleVision AI")
 
-<div class="hero-small">
-Machine Learning • Computer Vision • Classification
-</div>
-
-<div class="hero-title">
-VehicleVision AI
-</div>
-
-<div class="hero-text">
-An end-to-end vehicle image classification system that
-transforms raw vehicle images into intelligent predictions
-using Machine Learning and Random Forest.
-</div>
-
-</div>
-""", unsafe_allow_html=True)
-
-
-# ============================================================
-# KEY METRICS
-# ============================================================
-
-st.markdown(
-    '<div class="section-title">Project at a Glance</div>',
-    unsafe_allow_html=True
+st.subheader(
+    "Vehicle Image Classification using Machine Learning"
 )
 
-st.markdown(
-    '<div class="section-subtitle">'
-    'From image preprocessing to model deployment'
-    '</div>',
-    unsafe_allow_html=True
+st.write(
+    "An end-to-end computer vision project that classifies "
+    "vehicle images into seven categories using a Random Forest model."
 )
 
-m1, m2, m3, m4 = st.columns(4)
-
-with m1:
-    st.markdown("""
-    <div class="metric">
-        <div class="metric-label">Vehicle Classes</div>
-        <div class="metric-value">7</div>
-        <div class="metric-note">Multi-class classification</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with m2:
-    st.markdown("""
-    <div class="metric">
-        <div class="metric-label">Dataset</div>
-        <div class="metric-value">5,590</div>
-        <div class="metric-note">Vehicle images</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with m3:
-    st.markdown("""
-    <div class="metric">
-        <div class="metric-label">Baseline</div>
-        <div class="metric-value">43.38%</div>
-        <div class="metric-note">Decision Tree accuracy</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with m4:
-
-    if random_forest_accuracy > 0:
-        rf_display = f"{random_forest_accuracy:.2f}%"
-    else:
-        rf_display = "Pending"
-
-    st.markdown(f"""
-    <div class="metric">
-        <div class="metric-label">Final Model</div>
-        <div class="metric-value">{rf_display}</div>
-        <div class="metric-note">Random Forest accuracy</div>
-    </div>
-    """, unsafe_allow_html=True)
+st.divider()
 
 
 # ============================================================
-# MODEL EVOLUTION
+# PROJECT OVERVIEW
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">Model Evolution</div>',
-    unsafe_allow_html=True
-)
+st.header("Project Overview")
 
-st.markdown(
-    '<div class="section-subtitle">'
-    'Why the project moved from a single Decision Tree to Random Forest'
-    '</div>',
-    unsafe_allow_html=True
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.metric(
+        "Vehicle Classes",
+        "7"
+    )
+
+with col2:
+    st.metric(
+        "Dataset Images",
+        "5,590"
+    )
+
+with col3:
+    st.metric(
+        "Image Size",
+        "64 × 64"
+    )
+
+with col4:
+    st.metric(
+        "Decision Tree",
+        "43.38%"
+    )
+
+
+st.write("")
+
+
+# ============================================================
+# MODEL COMPARISON
+# ============================================================
+
+st.header("Model Performance")
+
+st.write(
+    "The Decision Tree was first used as a baseline model. "
+    "Random Forest was then applied as an ensemble approach "
+    "to improve the model's generalization and prediction stability."
 )
 
 if random_forest_accuracy > 0:
@@ -368,43 +220,34 @@ if random_forest_accuracy > 0:
     )
 
     relative_improvement = (
-        improvement /
-        decision_tree_accuracy
+        improvement / decision_tree_accuracy
     ) * 100
 
-    c1, c2, c3 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
 
-    with c1:
-        st.markdown(f"""
-        <div class="metric">
-            <div class="metric-label">Decision Tree</div>
-            <div class="metric-value">{decision_tree_accuracy:.2f}%</div>
-            <div class="metric-note">Baseline model</div>
-        </div>
-        """, unsafe_allow_html=True)
+    with col1:
+        st.metric(
+            "Decision Tree",
+            f"{decision_tree_accuracy:.2f}%"
+        )
 
-    with c2:
-        st.markdown(f"""
-        <div class="metric">
-            <div class="metric-label">Random Forest</div>
-            <div class="metric-value">{random_forest_accuracy:.2f}%</div>
-            <div class="metric-note">Ensemble model</div>
-        </div>
-        """, unsafe_allow_html=True)
+    with col2:
+        st.metric(
+            "Random Forest",
+            f"{random_forest_accuracy:.2f}%"
+        )
 
-    with c3:
-        st.markdown(f"""
-        <div class="metric">
-            <div class="metric-label">Improvement</div>
-            <div class="metric-value">+{improvement:.2f}</div>
-            <div class="metric-note">
-                percentage points ({relative_improvement:.1f}% relative)
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+    with col3:
+        st.metric(
+            "Improvement",
+            f"+{improvement:.2f}%"
+        )
 
     comparison = pd.DataFrame({
-        "Model": ["Decision Tree", "Random Forest"],
+        "Model": [
+            "Decision Tree",
+            "Random Forest"
+        ],
         "Accuracy": [
             decision_tree_accuracy,
             random_forest_accuracy
@@ -412,326 +255,320 @@ if random_forest_accuracy > 0:
     })
 
     st.bar_chart(
-        comparison.set_index("Model"),
-        y="Accuracy"
+        comparison.set_index("Model")
+    )
+
+    st.success(
+        f"Random Forest improved the accuracy by "
+        f"{improvement:.2f} percentage points "
+        f"({relative_improvement:.1f}% relative improvement)."
     )
 
 else:
 
-    st.markdown("""
-    <div class="card">
+    col1, col2 = st.columns(2)
 
-    <b>Decision Tree baseline: 43.38%</b>
+    with col1:
+        st.metric(
+            "Decision Tree Accuracy",
+            "43.38%"
+        )
 
-    <br><br>
+    with col2:
+        st.metric(
+            "Random Forest Accuracy",
+            "Run Model"
+        )
 
-    The first model established a baseline accuracy of
-    <b>43.38%</b>. Random Forest was introduced as the
-    next step to improve stability and generalization by
-    combining multiple decision trees.
-
-    <br><br>
-
-    <b>Run the Random Forest training notebook and enter
-    its final accuracy in the app to complete this comparison.</b>
-
-    </div>
-    """, unsafe_allow_html=True)
+    st.info(
+        "After running the Random Forest training code, "
+        "enter its accuracy in the code above to complete "
+        "the comparison."
+    )
 
 
 # ============================================================
-# IMAGE CLASSIFICATION
+# WHY RANDOM FOREST?
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">Try the AI</div>',
-    unsafe_allow_html=True
-)
+st.header("Why Random Forest?")
 
-st.markdown(
-    '<div class="section-subtitle">'
-    'Upload a vehicle image and see what the trained model predicts.'
-    '</div>',
-    unsafe_allow_html=True
+col1, col2 = st.columns(2)
+
+with col1:
+
+    st.subheader("Decision Tree")
+
+    st.write(
+        "A Decision Tree makes predictions using a single "
+        "tree. It is simple and easy to interpret, but its "
+        "performance can be sensitive to the training data."
+    )
+
+    st.write("**Baseline Accuracy: 43.38%**")
+
+
+with col2:
+
+    st.subheader("Random Forest")
+
+    st.write(
+        "Random Forest combines multiple Decision Trees "
+        "and aggregates their predictions. This makes the "
+        "model more robust and generally reduces the risk "
+        "of relying on one unstable tree."
+    )
+
+    st.write("**Final Model: Random Forest**")
+
+
+st.divider()
+
+
+# ============================================================
+# IMAGE PREDICTION
+# ============================================================
+
+st.header("Try VehicleVision AI")
+
+st.write(
+    "Upload a vehicle image and the trained Random Forest "
+    "model will predict its category."
 )
 
 uploaded_file = st.file_uploader(
-    "Upload an image",
-    type=["jpg", "jpeg", "png"],
-    label_visibility="collapsed"
+    "Choose a vehicle image",
+    type=["jpg", "jpeg", "png"]
 )
 
 
-if uploaded_file:
+if uploaded_file is not None:
 
+    # Read image
     file_bytes = np.asarray(
         bytearray(uploaded_file.read()),
         dtype=np.uint8
     )
 
-    original_img = cv2.imdecode(
+    image = cv2.imdecode(
         file_bytes,
         cv2.IMREAD_COLOR
     )
 
-    # Preprocess exactly like training
-    processed_img = cv2.resize(
-        original_img,
-        (64, 64)
-    )
+    if image is None:
 
-    flattened = processed_img.flatten().reshape(
-        1, -1
-    )
-
-    # Prediction
-    prediction = model.predict(flattened)
-
-    predicted_index = int(prediction[0])
-
-    predicted_class = classes[predicted_index]
-
-    # Probability
-    if hasattr(model, "predict_proba"):
-
-        probabilities = model.predict_proba(
-            flattened
-        )[0]
-
-        confidence = float(
-            np.max(probabilities)
-        ) * 100
+        st.error("Unable to read the uploaded image.")
 
     else:
-        probabilities = None
-        confidence = 0
 
-
-    image_col, result_col = st.columns(
-        [1.1, 0.9]
-    )
-
-    with image_col:
-
-        st.image(
-            cv2.cvtColor(
-                original_img,
-                cv2.COLOR_BGR2RGB
-            ),
-            caption="Uploaded Image",
-            use_container_width=True
+        # Resize exactly as training
+        resized_image = cv2.resize(
+            image,
+            (64, 64)
         )
 
-    with result_col:
-
-        st.markdown(f"""
-        <div class="prediction-card">
-
-            <div class="prediction-label">
-                AI Prediction
-            </div>
-
-            <div class="prediction-name">
-                {predicted_class}
-            </div>
-
-            <div class="confidence">
-                Confidence: {confidence:.2f}%
-            </div>
-
-        </div>
-        """, unsafe_allow_html=True)
-
-
-    # ========================================================
-    # PROBABILITY BREAKDOWN
-    # ========================================================
-
-    if probabilities is not None:
-
-        st.markdown(
-            '<div class="section-title">Prediction Breakdown</div>',
-            unsafe_allow_html=True
+        # Flatten exactly as training
+        flattened_image = resized_image.flatten().reshape(
+            1, -1
         )
 
-        probability_df = pd.DataFrame({
-            "Vehicle": classes,
-            "Probability": probabilities * 100
-        })
-
-        probability_df = probability_df.sort_values(
-            "Probability",
-            ascending=False
+        # Prediction
+        prediction = model.predict(
+            flattened_image
         )
 
-        st.bar_chart(
-            probability_df.set_index("Vehicle")
+        predicted_index = int(
+            prediction[0]
         )
+
+        predicted_class = classes[
+            predicted_index
+        ]
+
+        # Probability
+        if hasattr(model, "predict_proba"):
+
+            probabilities = model.predict_proba(
+                flattened_image
+            )[0]
+
+            confidence = (
+                np.max(probabilities) * 100
+            )
+
+        else:
+
+            probabilities = None
+            confidence = 0
+
+
+        # ----------------------------------------------------
+        # DISPLAY IMAGE + RESULT
+        # ----------------------------------------------------
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            st.image(
+                cv2.cvtColor(
+                    image,
+                    cv2.COLOR_BGR2RGB
+                ),
+                caption="Uploaded Vehicle",
+                use_container_width=True
+            )
+
+        with col2:
+
+            st.subheader("Prediction")
+
+            st.success(
+                f"Vehicle: {predicted_class}"
+            )
+
+            st.metric(
+                "Confidence",
+                f"{confidence:.2f}%"
+            )
+
+
+        # ----------------------------------------------------
+        # PROBABILITY BREAKDOWN
+        # ----------------------------------------------------
+
+        if probabilities is not None:
+
+            st.subheader(
+                "Prediction Probability by Class"
+            )
+
+            probability_df = pd.DataFrame({
+                "Vehicle": classes,
+                "Probability (%)":
+                    probabilities * 100
+            })
+
+            probability_df = (
+                probability_df
+                .sort_values(
+                    "Probability (%)",
+                    ascending=False
+                )
+            )
+
+            st.dataframe(
+                probability_df,
+                use_container_width=True,
+                hide_index=True
+            )
+
+            st.bar_chart(
+                probability_df.set_index(
+                    "Vehicle"
+                )
+            )
 
 
 # ============================================================
-# HOW RANDOM FOREST IMPROVES THE MODEL
+# MACHINE LEARNING PIPELINE
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">Why Random Forest?</div>',
-    unsafe_allow_html=True
+st.divider()
+
+st.header("Machine Learning Pipeline")
+
+pipeline = pd.DataFrame({
+    "Step": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+    ],
+    "Process": [
+        "Vehicle Image Dataset",
+        "Resize Images to 64 × 64",
+        "Convert Images to Pixel Features",
+        "Train/Test Split",
+        "Decision Tree Baseline",
+        "Random Forest Training",
+        "Pickle Model + Streamlit Deployment"
+    ]
+})
+
+st.dataframe(
+    pipeline,
+    use_container_width=True,
+    hide_index=True
 )
 
-c1, c2 = st.columns(2)
-
-with c1:
-
-    st.markdown("""
-    <div class="card">
-
-    ### Decision Tree
-
-    The initial model used a single Decision Tree.
-
-    **Accuracy: 43.38%**
-
-    A single tree can become highly dependent on the
-    particular training data and may produce unstable
-    predictions.
-
-    </div>
-    """, unsafe_allow_html=True)
-
-
-with c2:
-
-    st.markdown("""
-    <div class="card">
-
-    ### Random Forest
-
-    Random Forest combines predictions from many
-    Decision Trees.
-
-    Instead of relying on one tree, the ensemble
-    considers multiple trees before producing the
-    final classification.
-
-    **Result:** More robust and stable predictions.
-
-    </div>
-    """, unsafe_allow_html=True)
-
 
 # ============================================================
-# PROJECT PIPELINE
+# DATASET CLASSES
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">Project Pipeline</div>',
-    unsafe_allow_html=True
+st.header("Vehicle Categories")
+
+category_df = pd.DataFrame({
+    "Label": range(7),
+    "Vehicle Category": classes
+})
+
+st.dataframe(
+    category_df,
+    use_container_width=True,
+    hide_index=True
 )
-
-p1, p2, p3, p4 = st.columns(4)
-
-with p1:
-    st.markdown("""
-    <div class="step">
-        <div class="step-number">01</div>
-        <div class="step-title">Vehicle Images</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with p2:
-    st.markdown("""
-    <div class="step">
-        <div class="step-number">02</div>
-        <div class="step-title">Resize 64×64</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with p3:
-    st.markdown("""
-    <div class="step">
-        <div class="step-number">03</div>
-        <div class="step-title">Pixel Features</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with p4:
-    st.markdown("""
-    <div class="step">
-        <div class="step-number">04</div>
-        <div class="step-title">Random Forest</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-st.write("")
-
-p5, p6, p7, p8 = st.columns(4)
-
-with p5:
-    st.markdown("""
-    <div class="step">
-        <div class="step-number">05</div>
-        <div class="step-title">Classification</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with p6:
-    st.markdown("""
-    <div class="step">
-        <div class="step-number">06</div>
-        <div class="step-title">Confidence Score</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with p7:
-    st.markdown("""
-    <div class="step">
-        <div class="step-number">07</div>
-        <div class="step-title">Pickle Model</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with p8:
-    st.markdown("""
-    <div class="step">
-        <div class="step-number">08</div>
-        <div class="step-title">Streamlit App</div>
-    </div>
-    """, unsafe_allow_html=True)
 
 
 # ============================================================
 # TECHNOLOGY STACK
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">Technology Stack</div>',
-    unsafe_allow_html=True
+st.header("Technology Stack")
+
+st.write(
+    "**Python**  •  "
+    "**OpenCV**  •  "
+    "**NumPy**  •  "
+    "**Pandas**  •  "
+    "**Scikit-learn**  •  "
+    "**Random Forest**  •  "
+    "**Pickle**  •  "
+    "**Streamlit**"
 )
 
-st.markdown("""
-<div class="card">
 
-**Python** &nbsp; • &nbsp;
-**OpenCV** &nbsp; • &nbsp;
-**NumPy** &nbsp; • &nbsp;
-**Scikit-learn** &nbsp; • &nbsp;
-**Random Forest** &nbsp; • &nbsp;
-**Pickle** &nbsp; • &nbsp;
-**Streamlit**
+# ============================================================
+# PROJECT SUMMARY
+# ============================================================
 
-</div>
-""", unsafe_allow_html=True)
+st.divider()
+
+st.header("Project Summary")
+
+st.write(
+    "This project demonstrates how a traditional Machine "
+    "Learning approach can be applied to image classification. "
+    "A Decision Tree established the initial baseline with "
+    "43.38% accuracy. Random Forest was subsequently used "
+    "to combine multiple decision trees and create a more "
+    "robust classification model."
+)
 
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.markdown("""
-<div class="footer">
-
-VehicleVision AI — Machine Learning Portfolio Project
-
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="footer">
+        VehicleVision AI | Machine Learning Portfolio Project
+    </div>
+    """,
+    unsafe_allow_html=True
+)
